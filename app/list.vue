@@ -37,14 +37,16 @@ export default {
     watch: {
         dir: function() {
             this.contents = [];
-            this.readdir();
+            this.readdir().then(function(contents) {
+                this.contents = contents;
+            });
         }
     },
     methods: {
-        readdir: async function() {
-            const names = await fs.readdir(this.dir);
-            this.contents = await Promise.all(_.map(names, async (n) => {
-                const stats = await fs.lstat(path.resolve(this.dir, n));
+        readdir: async (dir) => {
+            const names = await fs.readdir(dir);
+            return Promise.all(_.map(names, async (n) => {
+                const stats = await fs.lstat(path.resolve(dir, n));
                 return {
                     name: n,
                     size: stats.isDirectory() ? null : stats.size,
