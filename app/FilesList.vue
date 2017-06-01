@@ -13,7 +13,7 @@
                 <md-table-cell>{{ file.name }}</md-table-cell>
                 <md-table-cell>{{ file.size || '-' }}</md-table-cell>
                 <md-table-cell>{{ file.type || '-' }}</md-table-cell>
-                <md-table-cell>{{ file.lastModified }}</md-table-cell>
+                <md-table-cell>{{ file.lastModified | date }}</md-table-cell>
             </md-table-row>
         </md-table-body>
     </md-table>
@@ -26,6 +26,8 @@ import path from 'path';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import mime from 'mime-types';
+
+import dateFilter from './filters/date.filter';
 
 // Returns "/home/{username}" in linux
 const getDefaultDir = os.homedir;
@@ -116,6 +118,9 @@ export default {
             this.dir = getDefaultDir();
         }
         this._updateContents();
+    },
+    filters: {
+        date: dateFilter
     }
 };
 </script>

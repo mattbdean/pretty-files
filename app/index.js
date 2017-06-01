@@ -13,5 +13,5 @@ Vue.material.registerTheme('default', {
 
 new Vue({
     el: '#app',
-    render: (h) => h(FilesList)
+    render: (h) => h(FilesList),
 });
