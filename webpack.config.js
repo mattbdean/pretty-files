@@ -31,5 +31,6 @@ module.exports = {
             template: 'app/index.html',
             cache: true
         }),
-    ]
+    ],
+    target: 'electron'
 };
