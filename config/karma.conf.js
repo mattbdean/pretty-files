@@ -1,21 +1,4 @@
-const path = require('path');
-const merge = require('webpack-merge');
-const webpack = require('webpack');
-
-const commonConfig = require('./webpack.common');
-
-let webpackConfig = merge(commonConfig, {
-    devtool: '#inline-source-map',
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': '"testing"'
-        })
-    ]
-});
-
-// Get rid of this extra stuff
-delete webpackConfig.entry;
-delete webpackConfig.output;
+const webpackConfig = require('./webpack.common');
 
 module.exports = config => {
     config.set({
