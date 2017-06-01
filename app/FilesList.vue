@@ -29,6 +29,8 @@ import mime from 'mime-types';
 
 // Returns "/home/{username}" in linux
 const getDefaultDir = os.homedir;
+// Files that pass this tests are included
+const includeFilter = (name) => name.indexOf('.') !== 0;
 
 export default {
     props: {
@@ -45,7 +47,7 @@ export default {
     },
     methods: {
         readdir: async (dir) => {
-            const names = await fs.readdir(dir);
+            const names = _.filter(await fs.readdir(dir), includeFilter);
             return Promise.all(_.map(names, async (n) => {
                 const stats = await fs.lstat(path.resolve(dir, n));
                 return {
