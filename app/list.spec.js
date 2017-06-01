@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import list from '../app/list.vue';
+import list from '../app/FilesList.vue';
 
 describe('list', () => {
     describe('readdir', () => {

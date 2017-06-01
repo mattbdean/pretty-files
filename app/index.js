@@ -1,8 +1,8 @@
 import Vue from 'vue';
 
-import List from './list.vue';
+import FilesList from './FilesList.vue';
 
 new Vue({
     el: '#app',
-    render: (h) => h(List)
+    render: (h) => h(FilesList)
 });
