@@ -1,15 +1,15 @@
 <template>
-    <md-table>
+    <md-table :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
         <md-table-header>
             <md-table-row>
-                <md-table-head>Name</md-table-head>
-                <md-table-head>Size</md-table-head>
-                <md-table-head>Type</md-table-head>
-                <md-table-head>Modified</md-table-head>
+                <md-table-head md-sort-by="name">Name</md-table-head>
+                <md-table-head md-sort-by="size">Size</md-table-head>
+                <md-table-head md-sort-by="type">Type</md-table-head>
+                <md-table-head md-sort-by="lastModified">Modified</md-table-head>
             </md-table-row>
         </md-table-header>
         <md-table-body>
-            <md-table-row v-for="file in contents">
+            <md-table-row v-for="file in contents" :key="file.name">
                 <md-table-cell>{{ file.name }}</md-table-cell>
                 <md-table-cell>{{ file.size || '-' }}</md-table-cell>
                 <md-table-cell>{{ file.type || '-' }}</md-table-cell>
@@ -32,6 +32,8 @@ const getDefaultDir = os.homedir;
 // Files that pass this tests are included
 const includeFilter = (name) => name.indexOf('.') !== 0;
 
+const getInitialSort = () => ({ name: 'name', type: 'asc' });
+
 export default {
     props: {
         initialDir: {
@@ -42,7 +44,9 @@ export default {
     data: function() {
         return {
             dir: this.initialDir,
-            contents: []
+            contents: [],
+            initialSort: getInitialSort(),
+            sort: getInitialSort()
         };
     },
     methods: {
@@ -82,8 +86,29 @@ export default {
 
             this.contents = [];
             this.readdir(this.dir).then(function(contents) {
-                vm.contents = contents;
+                vm.contents = vm.orderBy(contents, vm.sort);
             });
+        },
+
+        /** Called by md-table to sort based on a given property */
+        onSort: function(sort) {
+            this.sort = sort;
+            this.contents = this.orderBy(this.contents, this.sort);
+        },
+
+        /**
+         * Orders file entries by a given sort
+         *
+         * @param sort.name The name of the property to sort by ('name', 'size', etc.)
+         * @param sort.type Either "asc" or "desc"
+         */
+        orderBy: (entries, sort) => {
+            let orderFn = (item) => item[sort.name];
+            // Ignore case
+            if (sort.name === 'name')
+                orderFn = (item) => item[sort.name].toLowerCase();
+
+            return _.orderBy(entries, [orderFn], sort.type);
         }
     },
     created: async function() {
