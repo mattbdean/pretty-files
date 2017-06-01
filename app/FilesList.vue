@@ -1,22 +1,22 @@
 <template>
-    <table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Type</th>
-            <th>Modified</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="file in contents">
-            <td>{{ file.name }}</td>
-            <td>{{ file.size || '-' }}</td>
-            <td>{{ file.type || '-' }}</td>
-            <td>{{ file.lastModified }}</td>
-        </tr>
-        </tbody>
-    </table>
+    <md-table>
+        <md-table-header>
+            <md-table-row>
+                <md-table-head>Name</md-table-head>
+                <md-table-head>Size</md-table-head>
+                <md-table-head>Type</md-table-head>
+                <md-table-head>Modified</md-table-head>
+            </md-table-row>
+        </md-table-header>
+        <md-table-body>
+            <md-table-row v-for="file in contents">
+                <md-table-cell>{{ file.name }}</md-table-cell>
+                <md-table-cell>{{ file.size || '-' }}</md-table-cell>
+                <md-table-cell>{{ file.type || '-' }}</md-table-cell>
+                <md-table-cell>{{ file.lastModified }}</md-table-cell>
+            </md-table-row>
+        </md-table-body>
+    </md-table>
 </template>
 
 <script>
