@@ -27,19 +27,20 @@ import fs from 'fs-extra';
 import _ from 'lodash';
 import mime from 'mime-types';
 
+// Returns "/home/{username}" in linux
+const getDefaultDir = os.homedir;
+
 export default {
-    data: () => {
-        return {
-            dir: '',
-            contents: []
+    props: {
+        initialDir: {
+            type: String,
+            default: getDefaultDir
         }
     },
-    watch: {
-        dir: function() {
-            this.contents = [];
-            this.readdir().then(function(contents) {
-                this.contents = contents;
-            });
+    data: function() {
+        return {
+            dir: this.initialDir,
+            contents: []
         }
     },
     methods: {
@@ -54,11 +55,40 @@ export default {
                     lastModified: stats.mtime
                 };
             }));
+        },
+
+        /**
+         * Tests if the contents of a given directory can be read by the
+         * Electron process. Returns a Promise that resolves to a boolean.
+         */
+        isAccessibleDirectory: async (dir) => {
+            try {
+                await fs.access(dir, fs.constants.R_OK);
+                return (await fs.lstat(dir)).isDirectory();
+            } catch (err) {
+                // Doesn't exist or not readable
+                return false;
+            }
+        },
+
+        /**
+         * Update the contents array based on the current directory
+         * @private
+         */
+        _updateContents: function() {
+            const vm = this;
+
+            this.contents = [];
+            this.readdir(this.dir).then(function(contents) {
+                vm.contents = contents;
+            });
         }
     },
-    created: function() {
-        // Initialize to home directory (e.g. /home/{username} on linux)
-        this.dir = os.homedir();
+    created: async function() {
+        if (!(await this.isAccessibleDirectory(this.dir))) {
+            this.dir = getDefaultDir();
+        }
+        this._updateContents();
     }
 }
 </script>

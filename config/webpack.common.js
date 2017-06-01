@@ -8,7 +8,7 @@ module.exports = {
         app: './app/index.js'
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../dist'),
         filename: '[name].js',
         // Leave publicPath empty so that we don't have to rely on absolute paths
         publicPath: ''
