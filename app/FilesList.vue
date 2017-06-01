@@ -43,7 +43,7 @@ export default {
         return {
             dir: this.initialDir,
             contents: []
-        }
+        };
     },
     methods: {
         readdir: async (dir) => {
@@ -92,5 +92,5 @@ export default {
         }
         this._updateContents();
     }
-}
+};
 </script>

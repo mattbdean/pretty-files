@@ -3,6 +3,9 @@ import process from 'process';
 
 import FilesList from '../app/FilesList.vue';
 
+/* eslint-env mocha */
+/* global expect */
+
 describe('list', () => {
     describe('readdir', () => {
         const readdir = FilesList.methods.readdir;
