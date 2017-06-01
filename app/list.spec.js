@@ -2,9 +2,14 @@ import os from 'os';
 import process from 'process';
 
 import FilesList from '../app/FilesList.vue';
+import chai from 'chai';
+import dirtyChai from 'dirty-chai';
+
+chai.use(dirtyChai);
+
+const expect = chai.expect;
 
 /* eslint-env mocha */
-/* global expect */
 
 describe('list', () => {
     describe('readdir', () => {
@@ -40,16 +45,16 @@ describe('list', () => {
         const isAccessibleDirectory = FilesList.methods.isAccessibleDirectory;
 
         it('should resolve to false when given a non-existent directory', async () => {
-            expect(await isAccessibleDirectory('/foo/bar')).to.be.false;
+            expect(await isAccessibleDirectory('/foo/bar')).to.be.false();
 
             if (process.platform !== 'win32') {
-                expect(await isAccessibleDirectory('/root')).to.be.false;
+                expect(await isAccessibleDirectory('/root')).to.be.false();
             }
         });
 
         it('should resolve to true when given a dir that exists',  async () => {
-            expect(await isAccessibleDirectory('.')).to.be.true;
-            expect(await isAccessibleDirectory(os.homedir())).to.be.true;
+            expect(await isAccessibleDirectory('.')).to.be.true();
+            expect(await isAccessibleDirectory(os.homedir())).to.be.true();
         });
     });
 });

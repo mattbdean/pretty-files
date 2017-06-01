@@ -15,7 +15,8 @@ module.exports = {
         publicPath: ''
     },
     resolve: {
-        extensions: ['.js', '.vue']
+        // .json is required for importing chai
+        extensions: ['.js', '.vue', '.json']
     },
     module: {
         rules: [

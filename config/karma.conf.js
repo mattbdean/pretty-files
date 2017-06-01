@@ -38,7 +38,7 @@ module.exports = config => {
         // Include this one file so that we can use webpack to require all our
         // sources and tests
         files: ['./karma-test-shim.js'],
-        frameworks: ['mocha', 'chai'],
+        frameworks: ['mocha'],
 
         //
         preprocessors: {
