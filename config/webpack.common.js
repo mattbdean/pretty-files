@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -39,10 +40,16 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             template: 'app/index.html',
             cache: true
-        }),
+        })
     ],
-    target: 'electron-renderer'
+    devServer: {
+        contentBase: path.resolve(__dirname, '../dist'),
+        publicPath: '/',
+        port: 3000
+    },
+    target: 'electron-main'
 };

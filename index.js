@@ -6,11 +6,14 @@ let win;
 
 const createWindow = () => {
     win = new BrowserWindow({ width: 800, height: 600 });
-    win.loadURL(url.format({
-        pathname: path.resolve(__dirname, 'dist/index.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
+    // win.loadURL(url.format({
+    //     pathname: path.resolve(__dirname, 'dist/index.html'),
+    //     protocol: 'file:',
+    //     slashes: true
+    // }));
+
+    // Connect to port hosted by webpack-dev-server for HMR
+    win.loadURL('http://localhost:3000');
     win.webContents.openDevTools();
 
     win.on('closed', () => {
