@@ -1,5 +1,5 @@
 <template>
-    <md-table :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
+    <md-table class="files-list" :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
         <md-table-header>
             <md-table-row>
                 <md-table-head md-sort-by="name">Name</md-table-head>
@@ -126,3 +126,9 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.files-list * {
+    user-select: none;
+}
+</style>
