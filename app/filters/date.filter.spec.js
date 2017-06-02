@@ -23,6 +23,7 @@ describe('date filter', () => {
             const result = date(input);
             expect(result).to.exist();
             expect(result).to.be.a('string');
+            expect(result).to.have.length.above(0, `input=${input}`);
         }
     });
 });
