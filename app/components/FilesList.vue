@@ -12,7 +12,7 @@
             <md-table-body>
                 <md-table-row v-for="file in contents" :key="file.name" @dblclick.native="onChooseDir(file)">
                     <md-table-cell>
-                        <md-icon>{{ file.dir ? 'folder' : 'insert_drive_file' }}</md-icon>
+                        <md-icon :md-src="file.dir ? folderIcon : fileIcon"></md-icon>
                         <span class="entry-name">{{ file.name }}</span>
                     </md-table-cell>
                     <md-table-cell>{{ file.size | fileSize }}</md-table-cell>
@@ -37,6 +37,8 @@ import mime from 'mime-types';
 
 import dateFilter from '../filters/date.filter';
 import { DIRECTORY_SIZE, fileSize } from '../filters/file-size.filter';
+import fileIcon from '../../assets/file-outline.svg';
+import folderIcon from '../../assets/folder.svg';
 
 // Returns "/home/{username}" in linux
 const getDefaultDir = os.homedir;
@@ -57,7 +59,9 @@ export default {
             dir: this.initialDir,
             contents: [],
             initialSort: getInitialSort(),
-            sort: getInitialSort()
+            sort: getInitialSort(),
+            fileIcon,
+            folderIcon
         };
     },
     methods: {
@@ -156,7 +160,7 @@ export default {
     cursor: default;
 }
 
-i.material-icons {
+i.md-icon {
     margin: 0 8px 0 0;
 }
 
