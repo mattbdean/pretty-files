@@ -1,3 +1,10 @@
+html, body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+
 // Google's Material icon font config
 .material-icons, .md-icon {
     color: rgba(0, 0, 0, 0.54);

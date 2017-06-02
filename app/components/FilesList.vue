@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <md-table class="files-list" :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
+    <div class="wrapper">
+        <abnormal-directory-display v-if="empty" @back="navigateUp" message="This folder is empty"></abnormal-directory-display>
+        <md-table v-else class="files-list" :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
             <md-table-header>
                 <md-table-row>
                     <md-table-head md-sort-by="name">Name</md-table-head>
@@ -36,6 +37,7 @@ import { shell } from 'electron';
 import _ from 'lodash';
 import mime from 'mime-types';
 
+import AbnormalDirectoryDisplay from '../components/AbnormalDirectoryDisplay.vue';
 import dateFilter from '../filters/date.filter';
 import { DIRECTORY_SIZE, fileSize } from '../filters/file-size.filter';
 import fileIcon from '../../assets/file-outline.svg';
@@ -58,6 +60,7 @@ export default {
     data: function() {
         return {
             dir: this.initialDir,
+            empty: false,
             contents: [],
             initialSort: getInitialSort(),
             sort: getInitialSort(),
@@ -100,8 +103,9 @@ export default {
          * @private
          */
         updateContents: async function() {
-            this.contents = [];
+            this.contents = null;
             this.contents = this.orderBy((await this.readdir(this.dir)), this.sort);
+            this.empty = this.contents.length === 0;
         },
 
         /** Called by md-table to sort based on a given property */
@@ -151,6 +155,11 @@ export default {
             } else {
                 shell.openItem(newPath);
             }
+        },
+
+        navigateUp: function() {
+            this.dir = path.resolve(this.dir, '..');
+            return this.updateContents();
         }
     },
     created: async function() {
@@ -162,6 +171,9 @@ export default {
     filters: {
         date: dateFilter,
         fileSize
+    },
+    components: {
+        AbnormalDirectoryDisplay
     }
 };
 </script>
@@ -174,6 +186,10 @@ export default {
 
 i.md-icon {
     margin: 0 8px 0 0;
+}
+
+.wrapper {
+    height: 100%;
 }
 
 </style>
