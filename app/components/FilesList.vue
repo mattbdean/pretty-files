@@ -11,7 +11,7 @@
         <md-table-body>
             <md-table-row v-for="file in contents" :key="file.name">
                 <md-table-cell>{{ file.name }}</md-table-cell>
-                <md-table-cell>{{ file.size || '-' }}</md-table-cell>
+                <md-table-cell>{{ file.size | fileSize }}</md-table-cell>
                 <md-table-cell>{{ file.type || '-' }}</md-table-cell>
                 <md-table-cell>{{ file.lastModified | date }}</md-table-cell>
             </md-table-row>
@@ -28,6 +28,7 @@ import _ from 'lodash';
 import mime from 'mime-types';
 
 import dateFilter from '../filters/date.filter';
+import { DIRECTORY_SIZE, fileSize } from '../filters/file-size.filter';
 
 // Returns "/home/{username}" in linux
 const getDefaultDir = os.homedir;
@@ -58,7 +59,7 @@ export default {
                 const stats = await fs.lstat(path.resolve(dir, n));
                 return {
                     name: n,
-                    size: stats.isDirectory() ? null : stats.size,
+                    size: stats.isDirectory() ? DIRECTORY_SIZE : stats.size,
                     type: stats.isDirectory() ? null : mime.lookup(n) || 'application/octet-stream',
                     lastModified: stats.mtime
                 };
@@ -120,7 +121,8 @@ export default {
         this._updateContents();
     },
     filters: {
-        date: dateFilter
+        date: dateFilter,
+        fileSize
     }
 };
 </script>
