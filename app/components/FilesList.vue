@@ -10,7 +10,7 @@
                 </md-table-row>
             </md-table-header>
             <md-table-body>
-                <md-table-row v-for="file in contents" :key="file.name" @dblclick.native="onChooseDir(file)">
+                <md-table-row v-for="file in contents" :key="file.name" @dblclick.native="onChoose(file)">
                     <md-table-cell>
                         <md-icon :md-src="file.dir ? folderIcon : fileIcon"></md-icon>
                         <span class="entry-name">{{ file.name }}</span>
@@ -32,6 +32,7 @@ import os from 'os';
 import path from 'path';
 
 import fs from 'fs-extra';
+import { shell } from 'electron';
 import _ from 'lodash';
 import mime from 'mime-types';
 
@@ -137,17 +138,19 @@ export default {
          * Called when the user double clicks on a row. Updates the current
          * directory to the one specified at entry.name
          */
-        onChooseDir: async function(entry) {
-            if (!entry.dir) return;
+        onChoose: async function(entry) {
+            const newPath = path.resolve(this.dir, entry.name);
+            if (entry.dir) {
+                if (!(await this.isAccessibleDirectory(newPath))) {
+                    this.$refs.snackbar.open();
+                    return;
+                }
 
-            const newDir = path.resolve(this.dir, entry.name);
-            if (!(await this.isAccessibleDirectory(newDir))) {
-                this.$refs.snackbar.open();
-                return;
+                this.dir = newPath;
+                return this.updateContents();
+            } else {
+                shell.openItem(newPath);
             }
-
-            this.dir = newDir;
-            return this.updateContents();
         }
     },
     created: async function() {
