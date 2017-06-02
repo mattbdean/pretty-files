@@ -35,5 +35,6 @@ export default {
 p {
     user-select: none;
     cursor: default;
+    text-align: center;
 }
 </style>

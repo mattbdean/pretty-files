@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.css';
 
-import FilesList from './components/FilesList.vue';
+import App from './components/App.vue';
 
 import './base.scss';
 
@@ -15,5 +15,5 @@ Vue.material.registerTheme('default', {
 
 new Vue({
     el: '#app',
-    render: (h) => h(FilesList),
+    render: (h) => h(App),
 });
