@@ -27,7 +27,7 @@ import fs from 'fs-extra';
 import _ from 'lodash';
 import mime from 'mime-types';
 
-import dateFilter from './filters/date.filter';
+import dateFilter from '../filters/date.filter';
 
 // Returns "/home/{username}" in linux
 const getDefaultDir = os.homedir;

@@ -1,7 +1,7 @@
 import os from 'os';
 import process from 'process';
 
-import FilesList from '../app/FilesList.vue';
+import FilesList from './FilesList.vue';
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 
