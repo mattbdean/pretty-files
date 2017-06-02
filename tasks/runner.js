@@ -1,9 +1,11 @@
 const chalk = require('chalk');
 const exec = require('child_process').exec;
+const kill = require('tree-kill');
 
 let electronOpen = false;
+const children = [];
 
-const run = (command, prefix, onData = () => {}) => {
+const run = (command, prefix, killOthers = true, onData = () => {}) => {
     const child = exec(command);
 
     child.stdout.on('data', (data) => {
@@ -13,12 +15,21 @@ const run = (command, prefix, onData = () => {}) => {
     child.stderr.on('data', (data) => {
         process.stderr.write(prefix + ' ' + data);
     });
+    if (killOthers)
+        child.on('exit', killAll);
+    children.push(child);
     return child;
+};
+
+const killAll = () => {
+    for (const child of children) {
+        kill(child.pid);
+    }
 };
 
 console.log(chalk.blue('Starting webpack-dev-server'));
 
-run('webpack-dev-server --hot', chalk.blue('[webpack]'), (data) => {
+run('webpack-dev-server --hot', chalk.blue('[webpack]'), true, (data) => {
     // Webpack outputs a line like this when it finishes compiling:
     // "webpack: Compiled successfully."
     // We want to wait until webpack-dev-server has finished its first

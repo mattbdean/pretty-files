@@ -34,6 +34,7 @@
     "karma-webpack": "^2.0.3",
     "mocha": "^3.4.2",
     "style-loader": "^0.18.1",
+    "tree-kill": "^1.1.0",
     "vue-loader": "^12.2.1",
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.1",
