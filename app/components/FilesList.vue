@@ -75,7 +75,7 @@ export default {
                     name: n,
                     dir: isDir,
                     size: isDir ? DIRECTORY_SIZE : stats.size,
-                    type: isDir ? null : mime.lookup(n) || 'application/octet-stream',
+                    type: isDir ? 'folder' : mime.lookup(n) || 'application/octet-stream',
                     lastModified: stats.mtime
                 };
             }));
