@@ -11,7 +11,7 @@ const expect = chai.expect;
 
 /* eslint-env mocha */
 
-describe('list', () => {
+describe('FilesList', () => {
     describe('readdir', () => {
         const readdir = FilesList.methods.readdir;
 
