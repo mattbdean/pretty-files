@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
 const devtools = require('vue-devtools');
@@ -12,6 +12,7 @@ const createWindow = () => {
     //     protocol: 'file:',
     //     slashes: true
     // }));
+    Menu.setApplicationMenu(null);
 
     devtools.install();
 
