@@ -1,22 +1,27 @@
 <template>
-    <md-table class="files-list" :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
-        <md-table-header>
-            <md-table-row>
-                <md-table-head md-sort-by="name">Name</md-table-head>
-                <md-table-head md-sort-by="size">Size</md-table-head>
-                <md-table-head md-sort-by="type">Type</md-table-head>
-                <md-table-head md-sort-by="lastModified">Modified</md-table-head>
-            </md-table-row>
-        </md-table-header>
-        <md-table-body>
-            <md-table-row v-for="file in contents" :key="file.name">
-                <md-table-cell>{{ file.name }}</md-table-cell>
-                <md-table-cell>{{ file.size | fileSize }}</md-table-cell>
-                <md-table-cell>{{ file.type || '-' }}</md-table-cell>
-                <md-table-cell>{{ file.lastModified | date }}</md-table-cell>
-            </md-table-row>
-        </md-table-body>
-    </md-table>
+    <div>
+        <md-table class="files-list" :md-sort="initialSort.name" md-sort-type="initialSort.type" @sort="onSort">
+            <md-table-header>
+                <md-table-row>
+                    <md-table-head md-sort-by="name">Name</md-table-head>
+                    <md-table-head md-sort-by="size">Size</md-table-head>
+                    <md-table-head md-sort-by="type">Type</md-table-head>
+                    <md-table-head md-sort-by="lastModified">Modified</md-table-head>
+                </md-table-row>
+            </md-table-header>
+            <md-table-body>
+                <md-table-row v-for="file in contents" :key="file.name" @dblclick.native="onChooseDir(file)">
+                    <md-table-cell>{{ file.name }}</md-table-cell>
+                    <md-table-cell>{{ file.size | fileSize }}</md-table-cell>
+                    <md-table-cell>{{ file.type || '-' }}</md-table-cell>
+                    <md-table-cell>{{ file.lastModified | date }}</md-table-cell>
+                </md-table-row>
+            </md-table-body>
+        </md-table>
+        <md-snackbar ref="snackbar">
+            <span>That directory is inaccessible</span>
+        </md-snackbar>
+    </div>
 </template>
 
 <script>
@@ -57,10 +62,12 @@ export default {
             const names = _.filter(await fs.readdir(dir), includeFilter);
             return Promise.all(_.map(names, async (n) => {
                 const stats = await fs.lstat(path.resolve(dir, n));
+                const isDir = stats.isDirectory();
                 return {
                     name: n,
-                    size: stats.isDirectory() ? DIRECTORY_SIZE : stats.size,
-                    type: stats.isDirectory() ? null : mime.lookup(n) || 'application/octet-stream',
+                    dir: isDir,
+                    size: isDir ? DIRECTORY_SIZE : stats.size,
+                    type: isDir ? null : mime.lookup(n) || 'application/octet-stream',
                     lastModified: stats.mtime
                 };
             }));
@@ -84,13 +91,9 @@ export default {
          * Update the contents array based on the current directory
          * @private
          */
-        _updateContents: function() {
-            const vm = this;
-
+        updateContents: async function() {
             this.contents = [];
-            this.readdir(this.dir).then(function(contents) {
-                vm.contents = vm.orderBy(contents, vm.sort);
-            });
+            this.contents = this.orderBy((await this.readdir(this.dir)), this.sort);
         },
 
         /** Called by md-table to sort based on a given property */
@@ -112,13 +115,30 @@ export default {
                 orderFn = (item) => item[sort.name].toLowerCase();
 
             return _.orderBy(entries, [orderFn], sort.type);
+        },
+
+        /**
+         * Called when the user double clicks on a row. Updates the current
+         * directory to the one specified at entry.name
+         */
+        onChooseDir: async function(entry) {
+            if (!entry.dir) return;
+
+            const newDir = path.resolve(this.dir, entry.name);
+            if (!(await this.isAccessibleDirectory(newDir))) {
+                this.$refs.snackbar.open();
+                return;
+            }
+
+            this.dir = newDir;
+            return this.updateContents();
         }
     },
     created: async function() {
         if (!(await this.isAccessibleDirectory(this.dir))) {
             this.dir = getDefaultDir();
         }
-        this._updateContents();
+        this.updateContents();
     },
     filters: {
         date: dateFilter,

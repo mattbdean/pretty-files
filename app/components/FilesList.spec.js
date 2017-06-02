@@ -1,9 +1,14 @@
 import os from 'os';
 import process from 'process';
 
-import FilesList from './FilesList.vue';
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
+import Vue from 'vue';
+import VueMaterial from 'vue-material';
+
+Vue.use(VueMaterial);
+
+import FilesList from './FilesList.vue';
 
 chai.use(dirtyChai);
 
@@ -27,7 +32,7 @@ describe('FilesList', () => {
         it('should return an array of similar objects', async () => {
             const entries = await readdir('.');
             for (const entry of entries) {
-                expect(Object.keys(entry)).to.deep.equal(['name', 'size', 'type', 'lastModified']);
+                expect(Object.keys(entry)).to.deep.equal(['name', 'dir', 'size', 'type', 'lastModified']);
 
                 // These properties are common to both files and directories
                 expect(entry.lastModified).to.be.an.instanceof(Date);
