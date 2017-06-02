@@ -4,6 +4,8 @@ import 'vue-material/dist/vue-material.css';
 
 import FilesList from './components/FilesList.vue';
 
+import './base.scss';
+
 Vue.use(VueMaterial);
 Vue.material.registerTheme('default', {
     primary: 'blue',
