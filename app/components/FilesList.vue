@@ -116,12 +116,21 @@ export default {
          * @param sort.type Either "asc" or "desc"
          */
         orderBy: (entries, sort) => {
-            let orderFn = (item) => item[sort.name];
-            // Ignore case
-            if (sort.name === 'name')
-                orderFn = (item) => item[sort.name].toLowerCase();
+            let comparators = [(item) => item[sort.name]];
+            let orders = [sort.type];
 
-            return _.orderBy(entries, [orderFn], sort.type);
+            // Handle sorting by name specially
+            if (sort.name === 'name') {
+                comparators = [
+                    // Order by dir property first
+                    'dir',
+                    // Then by the name of
+                    (item) => item[sort.name].toLowerCase(),
+                ];
+                orders.unshift('desc');
+            }
+
+            return _.orderBy(entries, comparators, orders);
         },
 
         /**
