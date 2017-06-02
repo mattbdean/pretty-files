@@ -11,7 +11,10 @@
             </md-table-header>
             <md-table-body>
                 <md-table-row v-for="file in contents" :key="file.name" @dblclick.native="onChooseDir(file)">
-                    <md-table-cell>{{ file.name }}</md-table-cell>
+                    <md-table-cell>
+                        <md-icon>{{ file.dir ? 'folder' : 'insert_drive_file' }}</md-icon>
+                        <span class="entry-name">{{ file.name }}</span>
+                    </md-table-cell>
                     <md-table-cell>{{ file.size | fileSize }}</md-table-cell>
                     <md-table-cell>{{ file.type || '-' }}</md-table-cell>
                     <md-table-cell>{{ file.lastModified | date }}</md-table-cell>
@@ -150,5 +153,18 @@ export default {
 <style scoped>
 .files-list * {
     user-select: none;
+    cursor: default;
+}
+
+i.material-icons {
+    margin: 0 8px 0 0;
+}
+
+</style>
+
+<style>
+/* Global style */
+td .md-table-cell-container {
+    justify-content: flex-start !important;
 }
 </style>
