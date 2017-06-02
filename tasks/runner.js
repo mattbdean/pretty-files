@@ -7,11 +7,11 @@ const run = (command, prefix, onData = () => {}) => {
     const child = exec(command);
 
     child.stdout.on('data', (data) => {
-        process.stdout.write(prefix + ' ' + data + '\n');
+        process.stdout.write(prefix + ' ' + data);
         onData(data);
     });
     child.stderr.on('data', (data) => {
-        process.stderr.write(prefix + ' ' + data + '\n');
+        process.stderr.write(prefix + ' ' + data);
     });
     return child;
 };
@@ -27,6 +27,6 @@ run('webpack-dev-server --hot', chalk.blue('[webpack]'), (data) => {
     if (!electronOpen && /Compiled/.test(data)) {
         console.log(chalk.green('Initial build complete, starting Electron'));
         electronOpen = true;
-        run('electron .', chalk.green('[electron]'))
+        run('electron .', chalk.green('[electron]'));
     }
 });
