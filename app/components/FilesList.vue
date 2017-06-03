@@ -40,7 +40,7 @@ import { fileSize } from '../filters/file-size.filter';
 import { eventBus } from '../helpers/event-bus.helper';
 import fileIcon from '../../assets/file-outline.svg';
 import folderIcon from '../../assets/folder.svg';
-import { isAccessibleDirectory, readdir } from '../helpers/path.helper';
+import { isAccessibleDirectory, orderBy, readdir } from '../helpers/path.helper';
 
 const getInitialSort = () => ({ name: 'name', type: 'asc' });
 
@@ -63,45 +63,20 @@ export default {
         };
     },
     methods: {
-
         /**
          * Update the contents array based on the current directory
          * @private
          */
         updateContents: async function() {
             this.contents = null;
-            this.contents = this.orderBy((await readdir(this.dir)), this.sort);
+            this.contents = orderBy((await readdir(this.dir)), this.sort);
             this.empty = this.contents.length === 0;
         },
 
         /** Called by md-table to sort based on a given property */
         onSort: function(sort) {
             this.sort = sort;
-            this.contents = this.orderBy(this.contents, this.sort);
-        },
-
-        /**
-         * Orders file entries by a given sort
-         *
-         * @param sort.name The name of the property to sort by ('name', 'size', etc.)
-         * @param sort.type Either "asc" or "desc"
-         */
-        orderBy: (entries, sort) => {
-            let comparators = [(item) => item[sort.name]];
-            let orders = [sort.type];
-
-            // Handle sorting by name specially
-            if (sort.name === 'name') {
-                comparators = [
-                    // Order by dir property first
-                    'dir',
-                    // Then by the name of
-                    (item) => item[sort.name].toLowerCase(),
-                ];
-                orders.unshift('desc');
-            }
-
-            return _.orderBy(entries, comparators, orders);
+            this.contents = orderBy(this.contents, this.sort);
         },
 
         /**

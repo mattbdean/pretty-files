@@ -1,6 +1,7 @@
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
-import { DIRECTORY_SIZE, fileSize } from './file-size.filter';
+import { fileSize } from './file-size.filter';
+import { DIRECTORY_SIZE } from '../helpers/path.helper';
 
 chai.use(dirtyChai);
 

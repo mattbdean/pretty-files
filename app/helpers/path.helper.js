@@ -67,3 +67,31 @@ export const readdir = async (dir) => {
         };
     }));
 };
+
+/**
+ * Orders file entries by a given sort
+ *
+ * @param entries Filesystem entries returned by readdir()
+ * @param sort
+ * @param sort.name The name of the property to sort by ('name', 'size', etc.)
+ * @param sort.type Either "asc" or "desc"
+ */
+export const orderBy = (entries, sort) => {
+    let comparators = [(item) => item[sort.name]];
+    let orders = [sort.type];
+
+    // Handle sorting by name specially
+    if (sort.name === 'name') {
+        comparators = [
+            // Order by dir property first
+            'dir',
+            // Then by the name of
+            (item) => item[sort.name].toLowerCase(),
+        ];
+        // Show directories first
+        orders.unshift('desc');
+    }
+
+    return _.orderBy(entries, comparators, orders);
+};
+
