@@ -17,7 +17,6 @@ export const createState = () => {
         } else if (typeof dirOrHandler === 'string') {
             const dir = path.normalize(dirOrHandler);
             history.push(dir);
-            console.log(history)
             busHelper.$emit('cd', dir);
         } else {
             throw new Error('Expected argument to be a string or a function, got ' + dirOrHandler);
