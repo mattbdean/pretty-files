@@ -40,4 +40,9 @@ run('webpack-dev-server --hot', chalk.blue('[webpack]'), true, (data) => {
         electronOpen = true;
         run('electron .', chalk.green('[electron]'));
     }
+
+    if (/Failed to compile/.test(data)) {
+        console.log(chalk.red('Webpack failed to compile'));
+        killAll();
+    }
 });
