@@ -18,3 +18,8 @@ html, body {
         color: rgba(255, 255, 255, 0.7)
     }
 }
+
+.non-interactive {
+    user-select: none;
+    cursor: default;
+}

@@ -1,6 +1,6 @@
 <template>
 <div class="contents">
-    <p :class="cssClass">{{ message }}</p>
+    <p :class="cssClass + ' non-interactive'">{{ message }}</p>
     <md-button class="md-raised md-primary" @click.native="onBackRequested">Go back</md-button>
 </div>
 </template>
@@ -33,8 +33,6 @@ export default {
 }
 
 p {
-    user-select: none;
-    cursor: default;
     text-align: center;
 }
 </style>
