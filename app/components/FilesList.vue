@@ -37,7 +37,7 @@ import _ from 'lodash';
 import AbnormalDirectoryDisplay from '../components/AbnormalDirectoryDisplay.vue';
 import dateFilter from '../filters/date.filter';
 import { fileSize } from '../filters/file-size.filter';
-import { eventBus } from '../helpers/event-bus.helper';
+import { eventBus } from '../helpers/state.helper';
 import fileIcon from '../../assets/file-outline.svg';
 import folderIcon from '../../assets/folder.svg';
 import { isAccessibleDirectory, orderBy, readdir } from '../helpers/path.helper';

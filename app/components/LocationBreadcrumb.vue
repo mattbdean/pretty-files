@@ -9,7 +9,7 @@
 <script>
 import path from 'path';
 
-import { eventBus } from '../helpers/event-bus.helper';
+import { eventBus } from '../helpers/state.helper';
 import { splitPath } from '../helpers/path.helper';
 
 export default {
