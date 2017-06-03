@@ -34,13 +34,13 @@ export default {
             const newDir = path.normalize(this.parts.slice(0, partIndex + 1).join(path.sep));
             if (this.dir !== newDir) {
                 this.dir = newDir;
-                eventBus.$emit('cd', newDir);
+                eventBus.cd(newDir);
             }
         }
     },
     created: function() {
         const vm = this;
-        eventBus.$on('cd', function(newDir) {
+        eventBus.cd((newDir) => {
             if (vm.dir !== newDir) vm.dir = newDir;
         });
     }

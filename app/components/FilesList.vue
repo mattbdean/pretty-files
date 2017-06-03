@@ -99,7 +99,7 @@ export default {
 
         cd: async function(newDir) {
             this.dir = newDir;
-            eventBus.$emit('cd', newDir);
+            eventBus.cd(newDir);
             return this.updateContents();
         },
 
@@ -112,7 +112,7 @@ export default {
             throw new Error('not accessible: ' + this.dir);
         }
         const vm = this;
-        eventBus.$on('cd', function(newDir) {
+        eventBus.cd((newDir) => {
             // Make sure the paths are different so we don't run into a stack
             // overflow
             if (vm.dir !== newDir) vm.dir = newDir;
