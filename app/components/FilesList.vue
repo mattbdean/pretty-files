@@ -37,7 +37,7 @@ import _ from 'lodash';
 import AbnormalDirectoryDisplay from '../components/AbnormalDirectoryDisplay.vue';
 import dateFilter from '../filters/date.filter';
 import { fileSize } from '../filters/file-size.filter';
-import { eventBus } from '../helpers/state.helper';
+import { state } from '../helpers/state.helper';
 import fileIcon from '../../assets/file-outline.svg';
 import folderIcon from '../../assets/folder.svg';
 import { isAccessibleDirectory, orderBy, readdir } from '../helpers/path.helper';
@@ -99,7 +99,7 @@ export default {
 
         cd: async function(newDir) {
             this.dir = newDir;
-            eventBus.cd(newDir);
+            state.cd(newDir);
             return this.updateContents();
         },
 
@@ -112,7 +112,7 @@ export default {
             throw new Error('not accessible: ' + this.dir);
         }
         const vm = this;
-        eventBus.cd((newDir) => {
+        state.cd((newDir) => {
             // Make sure the paths are different so we don't run into a stack
             // overflow
             if (vm.dir !== newDir) vm.dir = newDir;

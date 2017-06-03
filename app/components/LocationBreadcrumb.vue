@@ -9,7 +9,7 @@
 <script>
 import path from 'path';
 
-import { eventBus } from '../helpers/state.helper';
+import { state } from '../helpers/state.helper';
 import { splitPath } from '../helpers/path.helper';
 
 export default {
@@ -34,13 +34,13 @@ export default {
             const newDir = path.normalize(this.parts.slice(0, partIndex + 1).join(path.sep));
             if (this.dir !== newDir) {
                 this.dir = newDir;
-                eventBus.cd(newDir);
+                state.cd(newDir);
             }
         }
     },
     created: function() {
         const vm = this;
-        eventBus.cd((newDir) => {
+        state.cd((newDir) => {
             if (vm.dir !== newDir) vm.dir = newDir;
         });
     }
