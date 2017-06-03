@@ -13,20 +13,14 @@ import { state } from '../helpers/state.helper';
 import { splitPath } from '../helpers/path.helper';
 
 export default {
-    props: {
-        initialDir: {
-            type: String,
-            required: true
-        }
-    },
     data: function() {
         return {
-            dir: this.initialDir
+            dir: null
         };
     },
     computed: {
         parts: function() {
-            return splitPath(this.dir);
+            return this.dir === null ? [] : splitPath(this.dir);
         }
     },
     methods: {

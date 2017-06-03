@@ -1,23 +1,24 @@
 <template>
     <div class="app-wrapper">
-        <location-breadcrumb :initial-dir="dir"></location-breadcrumb>
-        <files-list class="files-list" :initial-dir="dir"></files-list>
+        <location-breadcrumb></location-breadcrumb>
+        <files-list class="files-list"></files-list>
     </div>
 </template>
 
 <script>
 import { getDefaultDir } from '../helpers/config.helper';
+import { state } from '../helpers/state.helper';
 
 import FilesList from './FilesList.vue';
 import LocationBreadcrumb from './LocationBreadcrumb.vue';
 
 export default {
-    data: () => ({
-        dir: getDefaultDir()
-    }),
     components: {
         FilesList,
         LocationBreadcrumb
+    },
+    mounted: () => {
+        state.cd(getDefaultDir());
     }
 };
 </script>

@@ -45,15 +45,9 @@ import { isAccessibleDirectory, orderBy, readdir } from '../helpers/path.helper'
 const getInitialSort = () => ({ name: 'name', type: 'asc' });
 
 export default {
-    props: {
-        initialDir: {
-            type: String,
-            required: true
-        }
-    },
     data: function() {
         return {
-            dir: this.initialDir,
+            dir: null,
             empty: false,
             contents: [],
             initialSort: getInitialSort(),
@@ -107,10 +101,7 @@ export default {
             return this.cd(path.resolve(this.dir, '..'));
         }
     },
-    created: async function() {
-        if (!(await isAccessibleDirectory(this.dir))) {
-            throw new Error('not accessible: ' + this.dir);
-        }
+    created: function() {
         const vm = this;
         state.cd((newDir) => {
             // Make sure the paths are different so we don't run into a stack
@@ -118,7 +109,6 @@ export default {
             if (vm.dir !== newDir) vm.dir = newDir;
             vm.updateContents();
         });
-        return this.updateContents();
     },
     filters: {
         date: dateFilter,
