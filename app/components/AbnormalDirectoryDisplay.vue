@@ -5,6 +5,8 @@
 </div>
 </template>
 <script>
+import { state } from '../helpers/state.helper';
+
 export default {
     props: {
         message: {
@@ -17,9 +19,7 @@ export default {
         }
     },
     methods: {
-        onBackRequested: function() {
-            this.$emit('back');
-        }
+        onBackRequested: () => { state.revertCd(); }
     }
 };
 </script>
