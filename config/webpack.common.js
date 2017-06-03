@@ -33,7 +33,7 @@ module.exports = {
                     options: {
                         esModule: true,
                         loaders: {
-                            // scss: <bla>
+                            scss: 'vue-style-loader!css-loader!sass-loader'
                         }
                     },
                 }

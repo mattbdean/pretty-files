@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import os from 'os';
 import path from 'path';
 
 import fs from 'fs-extra';
@@ -40,11 +39,11 @@ import mime from 'mime-types';
 import AbnormalDirectoryDisplay from '../components/AbnormalDirectoryDisplay.vue';
 import dateFilter from '../filters/date.filter';
 import { DIRECTORY_SIZE, fileSize } from '../filters/file-size.filter';
+import { eventBus } from '../helpers/event-bus.helper';
 import fileIcon from '../../assets/file-outline.svg';
 import folderIcon from '../../assets/folder.svg';
+import { isAccessibleDirectory } from '../helpers/path.helper';
 
-// Returns "/home/{username}" in linux
-const getDefaultDir = os.homedir;
 // Files that pass this tests are included
 const includeFilter = (name) => name.indexOf('.') !== 0;
 
@@ -54,7 +53,7 @@ export default {
     props: {
         initialDir: {
             type: String,
-            default: getDefaultDir
+            required: true
         }
     },
     data: function() {
@@ -82,20 +81,6 @@ export default {
                     lastModified: stats.mtime
                 };
             }));
-        },
-
-        /**
-         * Tests if the contents of a given directory can be read by the
-         * Electron process. Returns a Promise that resolves to a boolean.
-         */
-        isAccessibleDirectory: async (dir) => {
-            try {
-                await fs.access(dir, fs.constants.R_OK);
-                return (await fs.lstat(dir)).isDirectory();
-            } catch (err) {
-                // Doesn't exist or not readable
-                return false;
-            }
         },
 
         /**
@@ -145,28 +130,39 @@ export default {
         onChoose: async function(entry) {
             const newPath = path.resolve(this.dir, entry.name);
             if (entry.dir) {
-                if (!(await this.isAccessibleDirectory(newPath))) {
+                if (!(await isAccessibleDirectory(newPath))) {
                     this.$refs.snackbar.open();
                     return;
                 }
 
-                this.dir = newPath;
-                return this.updateContents();
+                return this.cd(newPath);
             } else {
                 shell.openItem(newPath);
             }
         },
 
-        navigateUp: function() {
-            this.dir = path.resolve(this.dir, '..');
+        cd: async function(newDir) {
+            this.dir = newDir;
+            eventBus.$emit('cd', newDir);
             return this.updateContents();
+        },
+
+        navigateUp: function() {
+            return this.cd(path.resolve(this.dir, '..'));
         }
     },
     created: async function() {
-        if (!(await this.isAccessibleDirectory(this.dir))) {
-            this.dir = getDefaultDir();
+        if (!(await isAccessibleDirectory(this.dir))) {
+            throw new Error('not accessible: ' + this.dir);
         }
-        this.updateContents();
+        const vm = this;
+        eventBus.$on('cd', function(newDir) {
+            // Make sure the paths are different so we don't run into a stack
+            // overflow
+            if (vm.dir !== newDir) vm.dir = newDir;
+            vm.updateContents();
+        });
+        return this.updateContents();
     },
     filters: {
         date: dateFilter,
@@ -190,6 +186,7 @@ i.md-icon {
 
 .wrapper {
     height: 100%;
+    overflow: auto;
 }
 
 </style>

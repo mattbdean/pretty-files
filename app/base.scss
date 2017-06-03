@@ -9,8 +9,12 @@ html, body {
 .material-icons, .md-icon {
     color: rgba(0, 0, 0, 0.54);
 
-    .md-18 { font-size: 18px; }
-    .md-24 { font-size: 24px; }
+    &.md-18 { font-size: 18px; }
+    &.md-24 { font-size: 24px; }
 
-    .md-inactive { color: rgba(0, 0, 0, 0.26); }
+    &.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+    &.light {
+        color: rgba(255, 255, 255, 0.7)
+    }
 }
