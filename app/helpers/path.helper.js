@@ -1,5 +1,13 @@
 import fs from 'fs-extra';
+import _ from 'lodash';
+import mime from 'mime-types';
 import path from 'path';
+
+// Files that pass this tests are included
+export const includeFilter = (name) => name.indexOf('.') !== 0;
+
+/** The reported "size" of a directory */
+export const DIRECTORY_SIZE = -1;
 
 /**
  * Tests if the contents of a given directory can be read by the
@@ -25,4 +33,37 @@ export const splitPath = (p) => {
     const parts = path.normalize(p).split(path.sep);
     if (process.platform === 'linux') parts[0] = '/';
     return parts;
+};
+
+/**
+ * Reads a directory and returns a Promise that resolves to an array containing
+ * objects of the given shape:
+ *
+ * {
+ *   name: string,
+ *   dir: boolean (is this entry a directory?)
+ *   size: number (size in bytes),
+ *   type: string (mime type)
+ *   lastModified: Date
+ * }
+ *
+ * This function does not explicitly handle filesystem read errors. Make sure to
+ * handle EACCES and ENOENT errors.
+ *
+ * @param dir The directory to read
+ * @returns {Promise.<*>}
+ */
+export const readdir = async (dir) => {
+    const names = _.filter(await fs.readdir(dir), includeFilter);
+    return Promise.all(_.map(names, async (n) => {
+        const stats = await fs.lstat(path.resolve(dir, n));
+        const isDir = stats.isDirectory();
+        return {
+            name: n,
+            dir: isDir,
+            size: isDir ? DIRECTORY_SIZE : stats.size,
+            type: isDir ? 'folder' : mime.lookup(n) || 'application/octet-stream',
+            lastModified: stats.mtime
+        };
+    }));
 };

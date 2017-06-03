@@ -1,4 +1,5 @@
 import bytes from 'bytes';
+import { DIRECTORY_SIZE } from '../helpers/path.helper';
 
 /**
  * Uses the bytes library to format a number to a human-readable file size
@@ -20,5 +21,3 @@ export function fileSize(input) {
         decimalPlaces: 1
     });
 }
-
-export const DIRECTORY_SIZE = -1;

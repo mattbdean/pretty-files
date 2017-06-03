@@ -31,21 +31,16 @@
 <script>
 import path from 'path';
 
-import fs from 'fs-extra';
 import { shell } from 'electron';
 import _ from 'lodash';
-import mime from 'mime-types';
 
 import AbnormalDirectoryDisplay from '../components/AbnormalDirectoryDisplay.vue';
 import dateFilter from '../filters/date.filter';
-import { DIRECTORY_SIZE, fileSize } from '../filters/file-size.filter';
+import { fileSize } from '../filters/file-size.filter';
 import { eventBus } from '../helpers/event-bus.helper';
 import fileIcon from '../../assets/file-outline.svg';
 import folderIcon from '../../assets/folder.svg';
-import { isAccessibleDirectory } from '../helpers/path.helper';
-
-// Files that pass this tests are included
-const includeFilter = (name) => name.indexOf('.') !== 0;
+import { isAccessibleDirectory, readdir } from '../helpers/path.helper';
 
 const getInitialSort = () => ({ name: 'name', type: 'asc' });
 
@@ -68,20 +63,6 @@ export default {
         };
     },
     methods: {
-        readdir: async (dir) => {
-            const names = _.filter(await fs.readdir(dir), includeFilter);
-            return Promise.all(_.map(names, async (n) => {
-                const stats = await fs.lstat(path.resolve(dir, n));
-                const isDir = stats.isDirectory();
-                return {
-                    name: n,
-                    dir: isDir,
-                    size: isDir ? DIRECTORY_SIZE : stats.size,
-                    type: isDir ? 'folder' : mime.lookup(n) || 'application/octet-stream',
-                    lastModified: stats.mtime
-                };
-            }));
-        },
 
         /**
          * Update the contents array based on the current directory
@@ -89,7 +70,7 @@ export default {
          */
         updateContents: async function() {
             this.contents = null;
-            this.contents = this.orderBy((await this.readdir(this.dir)), this.sort);
+            this.contents = this.orderBy((await readdir(this.dir)), this.sort);
             this.empty = this.contents.length === 0;
         },
 
