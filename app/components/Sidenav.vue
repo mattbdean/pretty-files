@@ -1,18 +1,18 @@
 <template>
     <div class="sidenav-container">
-        <div class="header">
+        <div class="header non-interactive">
             <i class="material-icons md-36 account-icon">account_circle</i>
             <span class="username">{{ username }}</span>
         </div>
         <div class="contents">
             <md-list>
-                <md-subheader>Places</md-subheader>
+                <md-subheader class="non-interactive">Places</md-subheader>
                 <md-list-item @click.native="cd(homedir)">
                     <md-icon :md-src="folderIcon"></md-icon>
                     <span>Home</span>
                 </md-list-item>
 
-                <md-subheader>Drives</md-subheader>
+                <md-subheader class="non-interactive">Drives</md-subheader>
                 <md-list-item v-for="drive in drives" :key="drive.device" @click.native="showDrive(drive)">
                     <md-icon :md-src="diskIcon"></md-icon>
                     <span class="drive-name">{{ drive.mountpoints[0].path }}</span>
