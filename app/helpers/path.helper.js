@@ -1,3 +1,4 @@
+import drivelist from 'drivelist';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import mime from 'mime-types';
@@ -93,5 +94,14 @@ export const orderBy = (entries, sort) => {
     }
 
     return _.orderBy(entries, comparators, orders);
+};
+
+export const getMountedDrives = () => {
+    return new Promise((resolve, reject) => {
+        drivelist.list((error, drives) => {
+            if (error) reject(error);
+            else resolve(_.filter(drives, (d) => d.mountpoints.length > 0));
+        });
+    });
 };
 

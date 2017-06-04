@@ -7,10 +7,12 @@ html, body {
 
 // Google's Material icon font config
 .material-icons, .md-icon {
+    font-family: 'Material Icons', sans-serif;
     color: rgba(0, 0, 0, 0.54);
 
     &.md-18 { font-size: 18px; }
     &.md-24 { font-size: 24px; }
+    &.md-36 { font-size: 36px; }
 
     &.md-inactive { color: rgba(0, 0, 0, 0.26); }
 
