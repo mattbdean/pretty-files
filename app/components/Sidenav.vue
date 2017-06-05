@@ -55,7 +55,6 @@
 <style scoped>
     .sidenav-container {
         height: 100vh;
-        width: 250px;
         overflow: auto;
     }
 
